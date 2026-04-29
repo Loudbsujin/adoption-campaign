@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>퍼즐 디스플레이 — 입양의날</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0E0A06;
+    --bg2: #1A120B;
+    --text: #F8F3EB;
+    --accent: #E89A6A;
+    --serif: 'Noto Serif KR', Georgia, serif;
+    --sans:  'Noto Sans KR', system-ui, sans-serif;
+  }
+  html, body { height: 100%; }
+  body {
+    background: radial-gradient(ellipse at center, var(--bg2) 0%, var(--bg) 80%);
+    color: var(--text);
+    font-family: var(--sans);
+    overflow: hidden;
+  }
+  #stage { position: fixed; inset: 0; }
+  canvas { display: block; width: 100%; height: 100%; }
+
+  .hud {
+    position: fixed;
+    top: 32px;
+    left: 32px;
+    font-size: 14px;
+    color: rgba(248, 243, 235, 0.55);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .hud .title {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 600;
+    color: rgba(248, 243, 235, 0.85);
+    letter-spacing: 0.02em;
+    text-transform: none;
+    margin-bottom: 6px;
+  }
+  .progress {
+    position: fixed;
+    top: 32px;
+    right: 32px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .progress .num {
+    font-family: var(--serif);
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .progress .lbl {
+    font-size: 12px;
+    color: rgba(248, 243, 235, 0.5);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .toast-stack {
+    position: fixed;
+    bottom: 48px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(72vw, 1100px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    pointer-events: none;
+  }
+  .toast {
+    font-family: var(--serif);
+    font-size: 32px;
+    line-height: 1.4;
+    color: var(--text);
+    background: rgba(20, 14, 8, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 18px 32px;
+    border-radius: 14px;
+    border: 1px solid rgba(232, 154, 106, 0.28);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+    text-align: center;
+    max-width: 100%;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: pop 6s ease forwards;
+  }
+  @keyframes pop {
+    0%   { opacity: 0; transform: translateY(20px) scale(0.96); }
+    8%   { opacity: 1; transform: translateY(0)    scale(1); }
+    85%  { opacity: 1; transform: translateY(0)    scale(1); }
+    100% { opacity: 0; transform: translateY(-12px) scale(0.98); }
+  }
+
+  .complete-banner {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, rgba(232,154,106,0.12) 0%, transparent 70%);
+  }
+  .complete-banner.on { display: flex; animation: glow 2.4s ease both; }
+  @keyframes glow {
+    0% { opacity: 0; }
+    30% { opacity: 1; }
+    100% { opacity: 0.6; }
+  }
+  .complete-banner span {
+    font-family: var(--serif);
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--accent);
+    text-shadow: 0 0 24px rgba(232,154,106,0.6);
+  }
+</style>
+</head>
+<body>
+  <div id="stage"><canvas id="canvas"></canvas></div>
+
+  <div class="hud">
+    <div class="title">입양의날 응원 퍼즐</div>
+    <div>Adoption Day · Live</div>
+  </div>
+  <div class="progress">
+    <div><span id="count" class="num">0</span><span class="num" style="opacity:.5;font-size:24px"> / <span id="total">—</span></span></div>
+    <div class="lbl">조각 / Pieces</div>
+  </div>
+
+  <div id="toasts" class="toast-stack"></div>
+  <div id="complete" class="complete-banner"><span>함께 완성한 그림</span></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+(() => {
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const countEl = document.getElementById('count');
+  const totalEl = document.getElementById('total');
+  const toastsEl = document.getElementById('toasts');
+  const completeEl = document.getElementById('complete');
+
+  const state = {
+    grid: null,            // { cols, rows }
+    keyVisual: null,       // url
+    image: null,           // HTMLImageElement
+    pieceState: [],        // array of { alpha, target } per piece index
+    revealedCount: 0,
+    total: 0,
+    layout: null,          // computed image rect on canvas
+  };
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    computeLayout();
+  }
+  window.addEventListener('resize', resize);
+
+  function computeLayout() {
+    if (!state.image || !state.grid) return;
+    const W = window.innerWidth, H = window.innerHeight;
+    const margin = 80;
+    const availW = W - margin * 2, availH = H - margin * 2 - 120; // leave room for toast
+    const ir = state.image.width / state.image.height;
+    const ar = availW / availH;
+    let drawW, drawH;
+    if (ir > ar) { drawW = availW; drawH = drawW / ir; }
+    else         { drawH = availH; drawW = drawH * ir; }
+    const x = (W - drawW) / 2;
+    const y = (H - drawH) / 2 - 30;
+    state.layout = { x, y, w: drawW, h: drawH };
+  }
+
+  function initGrid(grid, total) {
+    state.grid = grid;
+    state.total = total;
+    state.pieceState = Array.from({ length: total }, () => ({ alpha: 0, target: 0 }));
+    totalEl.textContent = total;
+  }
+
+  function applyRevealed(list) {
+    state.revealedCount = 0;
+    for (const r of list) {
+      if (state.pieceState[r.pieceIndex]) {
+        state.pieceState[r.pieceIndex].target = 1;
+        state.pieceState[r.pieceIndex].alpha = 1; // restore instantly on reload
+        state.revealedCount++;
+      }
+    }
+    countEl.textContent = state.revealedCount;
+  }
+
+  function loadImage(url) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+
+  function pieceRect(idx) {
+    const { cols, rows } = state.grid;
+    const { x, y, w, h } = state.layout;
+    const r = Math.floor(idx / cols);
+    const c = idx % cols;
+    const pw = w / cols, ph = h / rows;
+    return { px: x + c * pw, py: y + r * ph, pw, ph };
+  }
+
+  function srcRect(idx) {
+    const { cols, rows } = state.grid;
+    const r = Math.floor(idx / cols);
+    const c = idx % cols;
+    const sw = state.image.width / cols;
+    const sh = state.image.height / rows;
+    return { sx: c * sw, sy: r * sh, sw, sh };
+  }
+
+  function drawFrame() {
+    if (!state.layout || !state.image || !state.grid) {
+      requestAnimationFrame(drawFrame);
+      return;
+    }
+    const W = window.innerWidth, H = window.innerHeight;
+    ctx.clearRect(0, 0, W, H);
+
+    const { x, y, w, h } = state.layout;
+
+    // dim placeholder behind the puzzle area
+    const grad = ctx.createLinearGradient(x, y, x, y + h);
+    grad.addColorStop(0, 'rgba(40, 28, 18, 0.55)');
+    grad.addColorStop(1, 'rgba(20, 14, 8, 0.85)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(x, y, w, h);
+
+    const { cols, rows } = state.grid;
+
+    // grid lines (subtle)
+    ctx.strokeStyle = 'rgba(248, 243, 235, 0.05)';
+    ctx.lineWidth = 1;
+    for (let c = 1; c < cols; c++) {
+      const gx = x + (w / cols) * c;
+      ctx.beginPath(); ctx.moveTo(gx, y); ctx.lineTo(gx, y + h); ctx.stroke();
+    }
+    for (let r = 1; r < rows; r++) {
+      const gy = y + (h / rows) * r;
+      ctx.beginPath(); ctx.moveTo(x, gy); ctx.lineTo(x + w, gy); ctx.stroke();
+    }
+
+    // pieces
+    for (let i = 0; i < state.pieceState.length; i++) {
+      const p = state.pieceState[i];
+      if (p.alpha < p.target) p.alpha = Math.min(p.target, p.alpha + 0.04);
+      else if (p.alpha > p.target) p.alpha = Math.max(p.target, p.alpha - 0.04);
+      if (p.alpha <= 0.001) continue;
+
+      const { px, py, pw, ph } = pieceRect(i);
+      const { sx, sy, sw, sh } = srcRect(i);
+      ctx.save();
+      ctx.globalAlpha = p.alpha;
+      ctx.drawImage(state.image, sx, sy, sw, sh, px, py, pw, ph);
+      // soft glow on freshly revealed pieces
+      if (p.alpha < 1) {
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.fillStyle = `rgba(232, 154, 106, ${0.15 * (1 - p.alpha)})`;
+        ctx.fillRect(px, py, pw, ph);
+      }
+      ctx.restore();
+    }
+
+    requestAnimationFrame(drawFrame);
+  }
+
+  function showToast(text) {
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.textContent = text;
+    toastsEl.appendChild(el);
+    // cap stack
+    while (toastsEl.children.length > 3) toastsEl.removeChild(toastsEl.firstChild);
+    setTimeout(() => el.remove(), 6200);
+  }
+
+  function fireComplete() {
+    completeEl.classList.add('on');
+    setTimeout(() => completeEl.classList.remove('on'), 6000);
+  }
+
+  // socket
+  const socket = io();
+  socket.on('hello', async (payload) => {
+    initGrid(payload.grid, payload.total);
+    if (!state.image || state.keyVisual !== payload.keyVisual) {
+      state.keyVisual = payload.keyVisual;
+      try {
+        state.image = await loadImage(payload.keyVisual);
+      } catch (e) {
+        console.error('keyvisual load failed', e);
+      }
+      computeLayout();
+    }
+    applyRevealed(payload.revealed || []);
+  });
+
+  socket.on('piece-revealed', (r) => {
+    if (!state.pieceState[r.pieceIndex]) return;
+    state.pieceState[r.pieceIndex].target = 1;
+    state.revealedCount++;
+    countEl.textContent = state.revealedCount;
+    if (r.message) showToast(r.message);
+  });
+
+  socket.on('puzzle-complete', () => {
+    fireComplete();
+  });
+
+  socket.on('gallery-message', (g) => {
+    if (g.message) showToast(g.message);
+  });
+
+  resize();
+  requestAnimationFrame(drawFrame);
+})();
+</script>
+</body>
+</html>

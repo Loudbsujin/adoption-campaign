@@ -1,0 +1,15 @@
+{
+  "name": "adoption-campaign-puzzle",
+  "version": "0.1.0",
+  "private": true,
+  "description": "입양의날 인터랙티브 퍼즐 퍼포먼스 프로토타입",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}

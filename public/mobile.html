@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>응원 메시지 보내기 — 입양의날</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #F8F3EB;
+    --card: #FEFCF8;
+    --text: #1E1610;
+    --text-mid: #6B5B4A;
+    --accent: #B85C38;
+    --accent-bg: #F5E8DF;
+    --border: #E2D8CE;
+    --ok: #4F7A52;
+    --err: #C2503A;
+  }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Noto Sans KR', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 24px 20px 40px;
+    display: flex;
+    justify-content: center;
+  }
+  .wrap { width: 100%; max-width: 480px; }
+  header { text-align: center; margin-bottom: 28px; }
+  header h1 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  header p { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+
+  form {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(30, 22, 16, 0.04);
+  }
+  label { display: block; font-size: 13px; color: var(--text-mid); margin-bottom: 8px; font-weight: 500; }
+  textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 14px;
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    resize: none;
+    outline: none;
+    transition: border-color .15s;
+  }
+  textarea:focus { border-color: var(--accent); }
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--text-mid);
+  }
+  button {
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    background: var(--accent);
+    border: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .toast {
+    margin-top: 16px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    text-align: center;
+    display: none;
+  }
+  .toast.ok  { display: block; background: #EDF3EE; color: var(--ok); }
+  .toast.err { display: block; background: #FBE9E5; color: var(--err); }
+  footer { margin-top: 24px; text-align: center; font-size: 12px; color: var(--text-mid); line-height: 1.6; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>입양의날 응원 메시지</h1>
+      <p>따뜻한 한 마디를 남겨 주세요.<br />무대 스크린에서 퍼즐의 한 조각이 됩니다.</p>
+    </header>
+
+    <form id="form">
+      <label for="text">응원 메시지 (최대 60자)</label>
+      <textarea id="text" name="text" maxlength="60" placeholder="예) 모든 아이가 사랑 안에서 자라기를"></textarea>
+      <div class="meta">
+        <span id="count">0 / 60</span>
+        <span>전송 후 잠시 뒤 스크린에 표시돼요</span>
+      </div>
+      <button id="submit" type="submit">메시지 보내기</button>
+      <div id="toast" class="toast"></div>
+    </form>
+
+    <footer>제출된 메시지는 행사 기간 동안만 사용되며, 부적절한 표현은 자동 차단됩니다.</footer>
+  </div>
+
+<script>
+  const form = document.getElementById('form');
+  const textArea = document.getElementById('text');
+  const count = document.getElementById('count');
+  const submitBtn = document.getElementById('submit');
+  const toast = document.getElementById('toast');
+
+  textArea.addEventListener('input', () => {
+    count.textContent = `${textArea.value.length} / 60`;
+  });
+
+  function showToast(msg, ok) {
+    toast.textContent = msg;
+    toast.className = 'toast ' + (ok ? 'ok' : 'err');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => { toast.className = 'toast'; }, 4000);
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = textArea.value.trim();
+    if (!text) return;
+    submitBtn.disabled = true;
+    try {
+      const res = await fetch('/api/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        textArea.value = '';
+        count.textContent = '0 / 60';
+        showToast('메시지가 전송되었어요. 감사합니다.', true);
+      } else {
+        showToast(data.error || '전송에 실패했어요.', false);
+      }
+    } catch (err) {
+      showToast('네트워크 오류가 발생했어요.', false);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
