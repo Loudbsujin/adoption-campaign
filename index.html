@@ -11,6 +11,17 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+::selection { background: var(--accent-bg); color: var(--accent-text); }
+
+@keyframes sticker-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .intro-mark { animation: sticker-float 3.6s ease-in-out infinite; }
+}
+
 :root {
   --bg:           #FAF0DC;
   --bg-card:      #FFFCF5;
@@ -203,6 +214,7 @@ body {
   background: var(--accent-bg);
   border-color: var(--accent);
   transform: translateX(0);
+  box-shadow: 0 4px 14px rgba(194, 107, 69, 0.18);
 }
 .choice-glyph {
   font-size: 11px;
@@ -364,7 +376,12 @@ body {
   gap: 14px;
   margin-bottom: 1.75rem;
 }
-.bridge-line { flex: 1; height: 1px; background: var(--border); }
+.bridge-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--leaf) 30%, var(--leaf) 70%, transparent);
+  opacity: 0.5;
+}
 .bridge-label {
   font-size: 11px;
   color: var(--text-light);
@@ -411,9 +428,14 @@ body {
   font-size: 13px;
   cursor: pointer;
   border-radius: 12px;
-  transition: border-color .2s, color .2s, background .2s;
+  transition: border-color .2s, color .2s, background .2s, transform .15s;
 }
-.btn-ghost:hover { border-color: var(--text-mid); color: var(--text); }
+.btn-ghost:hover {
+  border-color: var(--text-mid);
+  color: var(--text);
+  background: var(--bg-card);
+  transform: translateY(-1px);
+}
 
 .btn-accent {
   background: transparent;
@@ -424,9 +446,13 @@ body {
   font-size: 13px;
   cursor: pointer;
   border-radius: 12px;
-  transition: background .2s;
+  transition: background .2s, transform .15s, box-shadow .2s;
 }
-.btn-accent:hover { background: var(--accent-bg); }
+.btn-accent:hover {
+  background: var(--accent-bg);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(194, 107, 69, 0.15);
+}
 
 .campaign-footer {
   margin-top: 3rem;
