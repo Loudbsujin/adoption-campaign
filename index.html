@@ -370,10 +370,21 @@ body {
 
 <!-- Result -->
 <div class="screen hidden" id="screenResult">
-  <p class="eyebrow">나의 유형</p>
-  <p class="result-tag" id="rLabel"></p>
+  <p class="eyebrow">나의 가족 유형</p>
+  <p class="result-tag" id="rTag"></p>
   <h2 class="result-name" id="rName"></h2>
-  <p class="result-me" id="rMe"></p>
+  <p class="result-tagline" id="rTagline"></p>
+  <p class="result-traits" id="rTraits"></p>
+
+  <div class="reveal" id="signatureWrap">
+    <p class="section-label">이게 바로 찐모습</p>
+    <div class="signature-box" id="rSignature"></div>
+  </div>
+
+  <div class="reveal" id="powerWrap">
+    <p class="section-label">함께여서 POWER UP</p>
+    <div class="power-box" id="rPower"></div>
+  </div>
 
   <div class="bridge-wrap" id="bridgeWrap">
     <div class="bridge-divider">
@@ -382,19 +393,20 @@ body {
       <div class="bridge-line"></div>
     </div>
     <p class="result-bridge" id="rBridge"></p>
-    <span class="child-tag" id="rChildTag"></span>
+    <p class="slogan-line">입양, 한 아이의 온 세상을 만듭니다</p>
   </div>
 
   <div class="result-actions" id="rActions">
-    <button class="btn-primary" onclick="shareResult()">결과 공유하기</button>
+    <button class="btn-primary" onclick="shareResult()">결과 저장하기</button>
     <button class="btn-ghost" onclick="retryTest()">다시 하기</button>
-    <button class="btn-accent" onclick="learnMore()">더 알아보기 →</button>
+    <button class="btn-accent" onclick="shareSNS()">SNS 공유하기</button>
+    <button class="btn-accent" onclick="learnMore()">자세한 내용 확인하기 →</button>
   </div>
 
   <div class="campaign-footer" id="rFooter">
     <p class="footer-title">입양의날 인식개선 캠페인</p>
     지금 이 순간에도 가족을 기다리는 아이들이 있습니다.<br>
-    남아, 장애아동, 조금 더 자란 아이들 — 모두 누군가의 전부가 될 수 있어요.
+    한 아이의 온 세상이 되어줄 수 있는 가족을 기다리고 있어요.
   </div>
 </div>
 
