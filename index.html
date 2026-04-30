@@ -6,36 +6,47 @@
 <title>우리 가족은 어떤 가족일까 — 입양의날</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:           #F8F3EB;
-  --bg-card:      #FEFCF8;
-  --text:         #1E1610;
-  --text-mid:     #6B5B4A;
-  --text-light:   #A8927E;
-  --accent:       #B85C38;
-  --accent-bg:    #F5E8DF;
+  --bg:           #FAF0DC;
+  --bg-card:      #FFFCF5;
+  --text:         #3A2814;
+  --text-mid:     #7A6953;
+  --text-light:   #B5A28D;
+  --accent:       #C26B45;
+  --accent-bg:    #F8E5D7;
   --accent-text:  #8A3D21;
-  --border:       #E2D8CE;
+  --border:       #EAD9C8;
   --border-hover: #C4B5A5;
-  --progress:     #8C9E8A;
-  --serif: 'Noto Serif KR', Georgia, serif;
-  --sans:  'Noto Sans KR', system-ui, sans-serif;
+  --progress:     #9BB29A;
+
+  --sky:          #C7DEED;
+  --butter:       #F8E198;
+  --rose:         #F2A5B6;
+  --leaf:         #9BB29A;
+
+  --display: 'Gowun Batang', Georgia, serif;
+  --body:    'Gowun Dodum', system-ui, sans-serif;
+  --ui:      'Pretendard Variable', Pretendard, system-ui, -apple-system, sans-serif;
+  --serif:   var(--display);
+  --sans:    var(--ui);
 }
 
 html { background: var(--bg); }
 
 body {
-  font-family: var(--sans);
+  font-family: var(--body);
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ── Progress ── */
