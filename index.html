@@ -638,23 +638,42 @@ function pick(val, el) {
 
 function showResult() {
   setProgress(100);
-  const score = answers.filter(a => a === 'A').length;
-  const r = score <= 1 ? Results[0] : score <= 3 ? Results[1] : score <= 4 ? Results[2] : Results[3];
 
-  document.getElementById('rLabel').textContent = r.label;
+  const scores = new Array(Results.length).fill(0);
+  answers.forEach((ans, i) => {
+    Weights[i][ans].forEach(t => { scores[t - 1] += 1; });
+  });
+
+  let bestIdx = 0;
+  for (let i = 1; i < scores.length; i++) {
+    if (scores[i] > scores[bestIdx]) bestIdx = i;
+  }
+  const r = Results[bestIdx];
+
+  const pad2 = n => String(n).padStart(2, '0');
+  document.getElementById('rTag').textContent = `유형 ${pad2(bestIdx + 1)} / ${pad2(Results.length)}`;
   document.getElementById('rName').textContent = r.name;
-  document.getElementById('rMe').textContent = r.me;
-  document.getElementById('rBridge').textContent = r.bridge;
-  document.getElementById('rChildTag').textContent = r.childTag;
+  document.getElementById('rTagline').textContent = r.tagline;
+  document.getElementById('rTraits').textContent = r.traits;
+  document.getElementById('rSignature').textContent = r.signature;
+  document.getElementById('rPower').textContent = r.power;
+  document.getElementById('rBridge').innerHTML = r.bridge
+    .split('\n')
+    .map(line => line.replace(/[&<>]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch])))
+    .join('<br>');
 
-  ['bridgeWrap', 'rActions', 'rFooter'].forEach(id => document.getElementById(id).classList.remove('visible'));
+  ['signatureWrap', 'powerWrap', 'bridgeWrap', 'rActions', 'rFooter'].forEach(id =>
+    document.getElementById(id).classList.remove('visible')
+  );
   show('screenResult');
 
-  setTimeout(() => document.getElementById('bridgeWrap').classList.add('visible'), 500);
+  setTimeout(() => document.getElementById('signatureWrap').classList.add('visible'), 350);
+  setTimeout(() => document.getElementById('powerWrap').classList.add('visible'), 650);
+  setTimeout(() => document.getElementById('bridgeWrap').classList.add('visible'), 1000);
   setTimeout(() => {
     document.getElementById('rActions').classList.add('visible');
     document.getElementById('rFooter').classList.add('visible');
-  }, 1300);
+  }, 1750);
 }
 
 function retryTest() {
