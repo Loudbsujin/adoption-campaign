@@ -615,6 +615,13 @@ function setProgress(pct) {
   document.getElementById('progressFill').style.width = pct + '%';
 }
 
+function setImg(id, src, alt) {
+  const el = document.getElementById(id);
+  el.style.display = '';
+  el.alt = alt;
+  el.src = src;
+}
+
 function startTest() {
   curQ = 0; answers = [];
   setProgress(0);
@@ -693,6 +700,14 @@ function showResult() {
     .split('\n')
     .map(line => line.replace(/[&<>]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch])))
     .join('<br>');
+
+  const sectionBase = `images/sections/${r.slug}`;
+  setImg('imgType',      `images/types/${r.slug}.png`, `${r.name} 일러스트`);
+  setImg('imgTraits',    `${sectionBase}/traits.png`,    '');
+  setImg('imgSignature', `${sectionBase}/signature.png`, '');
+  setImg('imgPower',     `${sectionBase}/power.png`,     '');
+  setImg('imgBridge',    `${sectionBase}/bridge.png`,    '');
+  setImg('imgSlogan',    `${sectionBase}/slogan.png`,    '');
 
   ['signatureWrap', 'powerWrap', 'bridgeWrap', 'rActions', 'rFooter'].forEach(id =>
     document.getElementById(id).classList.remove('visible')
