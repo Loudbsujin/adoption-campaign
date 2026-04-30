@@ -682,19 +682,40 @@ function retryTest() {
   setTimeout(startTest, 300);
 }
 
-function shareResult() {
+function buildShareText() {
+  const tag = document.getElementById('rTag').textContent;
   const name = document.getElementById('rName').textContent;
-  const label = document.getElementById('rLabel').textContent;
-  const text = `${label} "${name}"\n입양의날 캠페인에서 나에 대해 알게 됐어요.`;
+  const tagline = document.getElementById('rTagline').textContent;
+  return `[${tag}] ${name}\n${tagline}\n\n입양, 한 아이의 온 세상을 만듭니다.\n#입양의날 #우리가족은어떤가족일까`;
+}
+
+function shareResult() {
+  const text = buildShareText();
+  if (!navigator.clipboard) {
+    alert('이 환경에서는 자동 복사가 지원되지 않아요.\n\n' + text);
+    return;
+  }
+  navigator.clipboard.writeText(text)
+    .then(() => alert('결과 텍스트가 복사되었습니다.\n원하는 곳에 붙여넣어 저장해 보세요.'))
+    .catch(() => alert('복사에 실패했어요. 직접 선택해 주세요.\n\n' + text));
+}
+
+function shareSNS() {
+  const text = buildShareText();
   if (navigator.share) {
-    navigator.share({ title: '나는 어떤 사람일까', text, url: location.href });
+    navigator.share({ title: '우리 가족은 어떤 가족일까', text, url: location.href }).catch(() => {});
+    return;
+  }
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text)
+      .then(() => alert('SNS 공유 API가 지원되지 않는 환경이에요.\n결과 텍스트를 복사했으니 원하는 곳에 붙여넣어 주세요.'));
   } else {
-    navigator.clipboard.writeText(text).then(() => alert('결과가 복사되었습니다.'));
+    alert('공유가 지원되지 않는 환경이에요.\n\n' + text);
   }
 }
 
 function learnMore() {
-  alert('캠페인 공식 페이지로 이동합니다.\n(랜딩페이지 URL 연결 예정)');
+  alert('입양 정보 페이지로 이동합니다.\n(랜딩페이지 URL 연결 예정)');
 }
 
 show('screenIntro');
