@@ -249,6 +249,22 @@ body {
   margin-bottom: .75rem;
 }
 
+.type-img {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  margin: 0 auto 1.75rem;
+}
+
+.section-img {
+  display: block;
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  margin: 0 auto 1rem;
+}
+
 .signature-box {
   background: var(--bg-card);
   border-left: 2px solid var(--border-hover);
@@ -422,17 +438,21 @@ body {
 <!-- Result -->
 <div class="screen hidden" id="screenResult">
   <p class="eyebrow">나의 가족 유형</p>
+  <img id="imgType" class="type-img" alt="" loading="lazy" onerror="this.style.display='none'">
   <p class="result-tag" id="rTag"></p>
   <h2 class="result-name" id="rName"></h2>
   <p class="result-tagline" id="rTagline"></p>
+  <img id="imgTraits" class="section-img" alt="" loading="lazy" onerror="this.style.display='none'">
   <p class="result-traits" id="rTraits"></p>
 
   <div class="reveal" id="signatureWrap">
+    <img id="imgSignature" class="section-img" alt="" loading="lazy" onerror="this.style.display='none'">
     <p class="section-label">이게 바로 찐모습</p>
     <div class="signature-box" id="rSignature"></div>
   </div>
 
   <div class="reveal" id="powerWrap">
+    <img id="imgPower" class="section-img" alt="" loading="lazy" onerror="this.style.display='none'">
     <p class="section-label">함께여서 POWER UP</p>
     <div class="power-box" id="rPower"></div>
   </div>
@@ -443,7 +463,9 @@ body {
       <span class="bridge-label">사실은</span>
       <div class="bridge-line"></div>
     </div>
+    <img id="imgBridge" class="section-img" alt="" loading="lazy" onerror="this.style.display='none'">
     <p class="result-bridge" id="rBridge"></p>
+    <img id="imgSlogan" class="section-img" alt="" loading="lazy" onerror="this.style.display='none'">
     <p class="slogan-line">입양, 한 아이의 온 세상을 만듭니다</p>
   </div>
 
