@@ -259,12 +259,16 @@ body {
 }
 
 .section-label {
+  font-family: var(--ui);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: .12em;
   color: var(--text-light);
   text-transform: uppercase;
   margin-bottom: .75rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .type-img {
@@ -282,6 +286,35 @@ body {
   height: auto;
   margin: 0 auto 1rem;
 }
+
+/* ── Stickers (가족 모티프 SVG) ── */
+.sticker {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.sticker-sm { width: 16px; height: 16px; }
+.sticker-md { width: 24px; height: 24px; }
+.sticker-lg { width: 36px; height: 36px; }
+.sticker-xl { width: 56px; height: 56px; }
+
+.sticker-leaf   { color: var(--leaf); }
+.sticker-rose   { color: var(--rose); }
+.sticker-butter { color: #E8C04D; }
+.sticker-sky    { color: var(--sky); }
+.sticker-accent { color: var(--accent); }
+
+.intro-mark {
+  display: block;
+  margin: 0 auto 1.25rem 0;
+}
+
+.slogan-mark {
+  display: block;
+  margin: 1.5rem auto 0.5rem;
+}
+
+.bridge-leaf-right { transform: scaleX(-1); }
 
 .signature-box {
   background: var(--bg-card);
@@ -454,6 +487,7 @@ body {
 
 <!-- Intro -->
 <div class="screen" id="screenIntro">
+  <svg class="sticker sticker-xl sticker-leaf intro-mark" aria-hidden="true"><use href="#sticker-house"/></svg>
   <p class="eyebrow">입양의날 캠페인 &nbsp;·&nbsp; 5월 11일</p>
   <h1 class="intro-title">우리 가족은<br>어떤 가족일까요?</h1>
   <p class="intro-desc">
@@ -487,25 +521,28 @@ body {
 
   <div class="reveal" id="signatureWrap">
     <img id="imgSignature" class="section-img" alt="" loading="lazy" onerror="this.style.display='none'">
-    <p class="section-label">이게 바로 찐모습</p>
+    <p class="section-label"><svg class="sticker sticker-sm sticker-leaf" aria-hidden="true"><use href="#sticker-leaf"/></svg>이게 바로 찐모습</p>
     <div class="signature-box" id="rSignature"></div>
   </div>
 
   <div class="reveal" id="powerWrap">
     <img id="imgPower" class="section-img" alt="" loading="lazy" onerror="this.style.display='none'">
-    <p class="section-label">함께여서 POWER UP</p>
+    <p class="section-label"><svg class="sticker sticker-sm sticker-rose" aria-hidden="true"><use href="#sticker-heart"/></svg>함께여서 POWER UP</p>
     <div class="power-box" id="rPower"></div>
   </div>
 
   <div class="bridge-wrap" id="bridgeWrap">
     <div class="bridge-divider">
+      <svg class="sticker sticker-sm sticker-leaf" aria-hidden="true"><use href="#sticker-leaf"/></svg>
       <div class="bridge-line"></div>
       <span class="bridge-label">사실은</span>
       <div class="bridge-line"></div>
+      <svg class="sticker sticker-sm sticker-leaf bridge-leaf-right" aria-hidden="true"><use href="#sticker-leaf"/></svg>
     </div>
     <img id="imgBridge" class="section-img" alt="" loading="lazy" onerror="this.style.display='none'">
     <p class="result-bridge" id="rBridge"></p>
     <img id="imgSlogan" class="section-img" alt="" loading="lazy" onerror="this.style.display='none'">
+    <svg class="sticker sticker-md sticker-butter slogan-mark" aria-hidden="true"><use href="#sticker-star"/></svg>
     <p class="slogan-line">입양, 한 아이의 온 세상을 만듭니다</p>
   </div>
 
