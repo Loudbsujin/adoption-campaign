@@ -222,13 +222,63 @@ body {
   word-break: keep-all;
 }
 
-.result-me {
+.result-tagline {
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 500;
+  letter-spacing: .02em;
+  margin-bottom: 1.5rem;
+  word-break: keep-all;
+}
+
+.result-traits {
   font-size: 15px;
   color: var(--text-mid);
   line-height: 1.95;
   word-break: keep-all;
   font-weight: 300;
   margin-bottom: 2.5rem;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  color: var(--text-light);
+  text-transform: uppercase;
+  margin-bottom: .75rem;
+}
+
+.signature-box {
+  background: var(--bg-card);
+  border-left: 2px solid var(--border-hover);
+  padding: 18px 22px;
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--text-mid);
+  word-break: keep-all;
+  font-weight: 300;
+}
+
+.power-box {
+  background: var(--accent-bg);
+  border-radius: 4px;
+  padding: 18px 22px;
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--accent-text);
+  word-break: keep-all;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .55s ease, transform .55s ease;
+  margin-bottom: 2rem;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .bridge-wrap {
@@ -261,14 +311,15 @@ body {
   margin-bottom: 1rem;
 }
 
-.child-tag {
-  display: inline-block;
-  font-size: 11px;
-  padding: 4px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  letter-spacing: .04em;
+.slogan-line {
+  font-family: var(--serif);
+  font-size: clamp(15px, 2.6vw, 17px);
+  font-weight: 600;
+  color: var(--accent-text);
+  line-height: 1.6;
+  margin-top: 1.25rem;
+  letter-spacing: .01em;
+  word-break: keep-all;
 }
 
 .result-actions {
