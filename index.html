@@ -706,7 +706,7 @@ const Results = [
   }
 ];
 
-let curQ = 0, answers = [];
+let curQ = 0, answers = [], currentResult = null;
 
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => {
@@ -795,6 +795,7 @@ function showResult() {
     if (scores[i] > scores[bestIdx]) bestIdx = i;
   }
   const r = Results[bestIdx];
+  currentResult = r;
 
   const pad2 = n => String(n).padStart(2, '0');
   document.getElementById('rTag').textContent = `유형 ${pad2(bestIdx + 1)} / ${pad2(Results.length)}`;
@@ -837,35 +838,77 @@ function retryTest() {
 }
 
 function buildShareText() {
-  const tag = document.getElementById('rTag').textContent;
-  const name = document.getElementById('rName').textContent;
-  const tagline = document.getElementById('rTagline').textContent;
-  return `[${tag}] ${name}\n${tagline}\n\n입양, 한 아이의 온 세상을 만듭니다.\n#입양의날 #우리가족은어떤가족일까`;
+  if (!currentResult) return '';
+  return `[${currentResult.name}]\n${currentResult.tagline}\n\n입양, 한 아이의 온 세상을 만듭니다.\n#입양의날 #우리가족은어떤가족일까`;
 }
 
-function shareResult() {
-  const text = buildShareText();
-  if (!navigator.clipboard) {
-    alert('이 환경에서는 자동 복사가 지원되지 않아요.\n\n' + text);
+async function loadResultImageFile() {
+  if (!currentResult) return null;
+  try {
+    const res = await fetch(`images/types/${currentResult.slug}.png`, { cache: 'no-store' });
+    if (!res.ok) return null;
+    const blob = await res.blob();
+    return new File([blob], `우리가족-${currentResult.name}.png`, { type: blob.type || 'image/png' });
+  } catch (e) {
+    return null;
+  }
+}
+
+function downloadFile(file) {
+  const url = URL.createObjectURL(file);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = file.name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+async function shareResult() {
+  const file = await loadResultImageFile();
+  if (!file) {
+    alert('결과 이미지가 아직 준비되지 않았어요. 잠시 후 다시 시도해 주세요.');
     return;
   }
-  navigator.clipboard.writeText(text)
-    .then(() => alert('결과 텍스트가 복사되었습니다.\n원하는 곳에 붙여넣어 저장해 보세요.'))
-    .catch(() => alert('복사에 실패했어요. 직접 선택해 주세요.\n\n' + text));
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: currentResult.name });
+      return;
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+    }
+  }
+  downloadFile(file);
 }
 
-function shareSNS() {
+async function shareSNS() {
+  const file = await loadResultImageFile();
   const text = buildShareText();
+  if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], text, title: currentResult.name });
+      return;
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+    }
+  }
   if (navigator.share) {
-    navigator.share({ title: '우리 가족은 어떤 가족일까', text, url: location.href }).catch(() => {});
-    return;
+    try {
+      await navigator.share({ title: currentResult.name, text, url: location.href });
+      return;
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+    }
   }
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(text)
-      .then(() => alert('SNS 공유 API가 지원되지 않는 환경이에요.\n결과 텍스트를 복사했으니 원하는 곳에 붙여넣어 주세요.'));
-  } else {
-    alert('공유가 지원되지 않는 환경이에요.\n\n' + text);
+    try {
+      await navigator.clipboard.writeText(text);
+      alert('공유 API가 지원되지 않는 환경이에요.\n결과 텍스트를 복사했으니 원하는 곳에 붙여넣어 주세요.');
+      return;
+    } catch (e) {}
   }
+  alert(text);
 }
 
 function learnMore() {
