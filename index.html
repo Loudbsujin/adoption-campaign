@@ -839,7 +839,14 @@ function retryTest() {
 
 function buildShareText() {
   if (!currentResult) return '';
-  return `[${currentResult.name}]\n${currentResult.tagline}\n\n입양, 한 아이의 온 세상을 만듭니다.\n#입양의날 #우리가족은어떤가족일까`;
+  return `"${currentResult.signature}"
+
+— ${currentResult.name} —
+
+당신의 가족은 어떤 모습일까요?
+
+${location.href}
+#입양의날 #5월11일`;
 }
 
 async function loadResultImageFile() {
