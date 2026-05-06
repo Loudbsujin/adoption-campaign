@@ -216,14 +216,6 @@ body {
   transform: translateX(0);
   box-shadow: 0 4px 14px rgba(194, 107, 69, 0.18);
 }
-.choice-glyph {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-light);
-  letter-spacing: .08em;
-  margin-bottom: 7px;
-}
-.choice-card.selected .choice-glyph { color: var(--accent); }
 .choice-body {
   font-size: 14px;
   color: var(--text-mid);
@@ -745,10 +737,10 @@ function renderQuestion() {
 
   const container = document.getElementById('choices');
   container.innerHTML = '';
-  [{ g: 'ㄱ', t: q.a, v: 'A' }, { g: 'ㄴ', t: q.b, v: 'B' }].forEach(opt => {
+  [{ t: q.a, v: 'A' }, { t: q.b, v: 'B' }].forEach(opt => {
     const card = document.createElement('div');
     card.className = 'choice-card';
-    card.innerHTML = `<div class="choice-glyph">${opt.g}</div><div class="choice-body">${opt.t}</div>`;
+    card.innerHTML = `<div class="choice-body">${opt.t}</div>`;
     card.addEventListener('click', () => pick(opt.v, card));
     container.appendChild(card);
   });
