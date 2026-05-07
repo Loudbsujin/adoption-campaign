@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시안 (귀여운 느낌) — 입양의날 캠페인</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* ── 시안 컬러 (파스텔 핑크 중심) ── */
+  --bg:           #FFF7F0;          /* peachy cream */
+  --bg-soft:      #FFEFE8;
+  --bg-card:      #FFFFFF;
+  --text:         #3F2A1E;
+  --text-mid:     #8A6E5C;
+  --text-light:   #C2A99A;
+
+  --accent:       #ED8B91;          /* rose-pink */
+  --accent-bg:    #FFE5EB;
+  --accent-text:  #C44A65;
+
+  --border:       #FCE4E0;
+  --border-hover: #F4C9C4;
+
+  --rose:    #FFB5C5;
+  --butter:  #FFD97D;
+  --sky:     #BFE0F0;
+  --leaf:    #BBD4B0;
+  --lilac:   #DCC8F0;
+
+  --display: 'Gowun Batang', Georgia, serif;
+  --body:    'Gowun Dodum', system-ui, sans-serif;
+  --ui:      'Pretendard Variable', Pretendard, system-ui, -apple-system, sans-serif;
+}
+
+html { background: var(--bg); }
+body {
+  font-family: var(--body);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  padding: 40px 20px 80px;
+}
+
+/* ── 시안 페이지 헤더 (실제 캠페인엔 미포함) ── */
+.preview-banner {
+  max-width: 900px;
+  margin: 0 auto 40px;
+  background: var(--bg-card);
+  border: 2px dashed var(--accent);
+  border-radius: 20px;
+  padding: 18px 24px;
+  font-family: var(--ui);
+  font-size: 13px;
+  color: var(--accent-text);
+  text-align: center;
+  line-height: 1.7;
+}
+.preview-banner strong { display: block; font-size: 15px; margin-bottom: 4px; }
+
+.preview-grid {
+  display: grid;
+  gap: 32px;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+/* ── Card frame (각 스크린을 카드처럼 표시) ── */
+.preview-card {
+  background: var(--bg);
+  border-radius: 32px;
+  padding: 56px 28px;
+  box-shadow:
+    0 12px 40px rgba(237, 139, 145, 0.10),
+    0 2px 8px rgba(63, 42, 30, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+.preview-card::before,
+.preview-card::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.preview-card::before {
+  width: 140px; height: 140px;
+  top: -40px; right: -40px;
+  background: radial-gradient(circle, rgba(255, 217, 125, 0.35), transparent 70%);
+}
+.preview-card::after {
+  width: 180px; height: 180px;
+  bottom: -60px; left: -60px;
+  background: radial-gradient(circle, rgba(255, 181, 197, 0.30), transparent 70%);
+}
+
+.preview-label {
+  font-family: var(--ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  color: var(--accent);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50%      { transform: translateY(-6px) rotate(-3deg); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-1.5deg); }
+  75% { transform: rotate(1.5deg); }
+}
+
+/* ── Sticker / decoration ── */
+.sticker { display: inline-block; vertical-align: middle; flex-shrink: 0; }
+.sticker-sm { width: 18px; height: 18px; }
+.sticker-md { width: 28px; height: 28px; }
+.sticker-lg { width: 44px; height: 44px; }
+.sticker-xl { width: 72px; height: 72px; }
+
+.sticker-rose   { color: var(--rose); }
+.sticker-butter { color: var(--butter); }
+.sticker-sky    { color: var(--sky); }
+.sticker-leaf   { color: var(--leaf); }
+.sticker-lilac  { color: var(--lilac); }
+.sticker-accent { color: var(--accent); }
+
+.deco-cluster {
+  position: absolute;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.deco-cluster .sticker { animation: float-soft 4s ease-in-out infinite; }
+.deco-cluster .sticker:nth-child(2) { animation-delay: 0.6s; }
+.deco-cluster .sticker:nth-child(3) { animation-delay: 1.2s; }
+
+/* ── INTRO ── */
+.intro-mark-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+  position: relative;
+  z-index: 2;
+}
+.intro-mark-wrap .sticker { animation: float-soft 3.6s ease-in-out infinite; }
+
+.intro-eyebrow {
+  font-family: var(--ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  color: var(--accent);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.intro-title {
+  font-family: var(--body);
+  font-size: clamp(28px, 6.5vw, 38px);
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text);
+  text-align: center;
+  margin-bottom: 1.25rem;
+  word-break: keep-all;
+}
+.intro-title em {
+  font-style: normal;
+  background: linear-gradient(transparent 60%, var(--butter) 60%, var(--butter) 92%, transparent 92%);
+  padding: 0 4px;
+}
+.intro-desc {
+  font-size: 14.5px;
+  color: var(--text-mid);
+  text-align: center;
+  line-height: 1.95;
+  margin-bottom: 1.25rem;
+  word-break: keep-all;
+}
+.intro-meta {
+  font-family: var(--ui);
+  font-size: 12px;
+  color: var(--text-light);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.intro-cta {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 16px 32px;
+  font-family: var(--ui);
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: .02em;
+  border-radius: 999px;
+  box-shadow:
+    0 6px 18px rgba(237, 139, 145, 0.40),
+    inset 0 -2px 0 rgba(196, 74, 101, 0.25);
+  transition: transform .2s, box-shadow .2s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(237, 139, 145, 0.45); }
+
+/* ── QUESTION ── */
+.q-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+.q-num {
+  font-family: var(--ui);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-bg);
+  padding: 6px 14px;
+  border-radius: 999px;
+  letter-spacing: .04em;
+}
+.q-axis {
+  font-family: var(--ui);
+  font-size: 11px;
+  color: var(--text-mid);
+  background: #fff;
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+.progress-bar {
+  height: 8px;
+  background: var(--bg-soft);
+  border-radius: 999px;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+.progress-fill {
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--rose), var(--accent));
+  border-radius: 999px;
+}
+.q-text {
+  font-family: var(--body);
+  font-size: clamp(18px, 4vw, 22px);
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 1.75rem;
+  text-align: center;
+  word-break: keep-all;
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.choice-card {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  padding: 20px 22px;
+  cursor: pointer;
+  transition: transform .18s, border-color .18s, box-shadow .2s;
+  word-break: keep-all;
+  font-size: 14.5px;
+  color: var(--text-mid);
+  line-height: 1.75;
+  position: relative;
+}
+.choice-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(237, 139, 145, 0.18);
+  animation: wiggle .5s ease;
+}
+.choice-card .choice-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 24px;
+  background: var(--accent-bg);
+  color: var(--accent-text);
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 12px;
+  border-radius: 999px;
+  margin-right: 8px;
+}
+
+/* ── RESULT ── */
+.result-eyebrow {
+  font-family: var(--ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  color: var(--text-light);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 14px;
+}
+.result-name-wrap {
+  text-align: center;
+  margin-bottom: 1.25rem;
+  position: relative;
+  z-index: 2;
+}
+.result-tag {
+  display: inline-block;
+  font-family: var(--ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  color: var(--accent);
+  background: var(--accent-bg);
+  padding: 5px 14px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+.result-name {
+  font-family: var(--body);
+  font-size: clamp(24px, 5.5vw, 32px);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.35;
+  margin-bottom: .75rem;
+  word-break: keep-all;
+}
+.result-tagline {
+  font-family: var(--ui);
+  font-size: 13.5px;
+  color: var(--text-mid);
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.character-bubble {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 1.75rem;
+  width: 200px; height: 200px;
+  background: linear-gradient(160deg, #FFE5EB, #FFF4D6);
+  border-radius: 50%;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 12px 28px rgba(237, 139, 145, 0.22);
+}
+.character-bubble::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 2px dashed rgba(255,255,255,0.7);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.section-block { margin-bottom: 1.75rem; }
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--ui);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-text);
+  letter-spacing: .04em;
+  margin-bottom: .75rem;
+  text-transform: none;
+}
+.section-label .pill {
+  background: var(--accent-bg);
+  padding: 5px 12px;
+  border-radius: 999px;
+}
+
+.signature-box, .power-box, .traits-box {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 22px;
+  padding: 20px 22px;
+  font-size: 14px;
+  line-height: 1.95;
+  color: var(--text-mid);
+  word-break: keep-all;
+  box-shadow: 0 4px 14px rgba(237, 139, 145, 0.06);
+}
+.power-box {
+  background: linear-gradient(145deg, #FFF4F6, #FFFAEC);
+  border-color: var(--rose);
+  color: var(--accent-text);
+}
+
+.bridge-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 1.5rem 0 1.25rem;
+}
+.bridge-line {
+  flex: 1; height: 1.5px;
+  background: linear-gradient(to right, transparent, var(--rose) 30%, var(--rose) 70%, transparent);
+  opacity: 0.6;
+}
+.bridge-label {
+  font-family: var(--ui);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--accent);
+  font-weight: 600;
+}
+.result-bridge {
+  font-size: 14.5px;
+  color: var(--text);
+  line-height: 1.95;
+  text-align: center;
+  word-break: keep-all;
+  margin-bottom: 1.5rem;
+}
+.slogan-line {
+  font-family: var(--body);
+  font-size: clamp(15px, 2.6vw, 17px);
+  font-weight: 700;
+  color: var(--accent-text);
+  text-align: center;
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 14px 24px;
+  margin-top: 1.25rem;
+  word-break: keep-all;
+}
+
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 2rem;
+}
+.btn-ghost, .btn-accent {
+  background: #fff;
+  color: var(--text-mid);
+  border: 1.5px solid var(--border);
+  padding: 12px 22px;
+  font-family: var(--ui);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 999px;
+  transition: transform .15s, border-color .2s;
+}
+.btn-accent {
+  color: var(--accent-text);
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+.btn-ghost:hover, .btn-accent:hover { transform: translateY(-1px); }
+
+/* ── 흩뿌려진 데코 스티커 ── */
+.scatter {
+  position: absolute;
+  pointer-events: none;
+}
+.scatter-1 { top: 18%; left: 6%; animation: float-soft 4.2s ease-in-out infinite; }
+.scatter-2 { top: 12%; right: 8%; animation: float-soft 5s ease-in-out infinite .8s; }
+.scatter-3 { bottom: 22%; left: 8%; animation: float-soft 4.6s ease-in-out infinite 1.4s; }
+.scatter-4 { bottom: 28%; right: 6%; animation: float-soft 5.2s ease-in-out infinite 0.4s; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="st-heart" viewBox="0 0 32 32">
+      <path d="M16 27 C 14 23, 4 19, 4 11 C 4 7, 7 4, 11 4 C 13 4, 16 7, 16 9 C 16 7, 19 4, 21 4 C 25 4, 28 7, 28 11 C 28 19, 18 23, 16 27 Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="st-star" viewBox="0 0 32 32">
+      <path d="M16 4 L19 12 L28 13 L21 19 L23 28 L16 23 L9 28 L11 19 L4 13 L13 12 Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="st-flower" viewBox="0 0 32 32">
+      <circle cx="16" cy="9"  r="5" fill="currentColor"/>
+      <circle cx="9"  cy="16" r="5" fill="currentColor"/>
+      <circle cx="23" cy="16" r="5" fill="currentColor"/>
+      <circle cx="16" cy="23" r="5" fill="currentColor"/>
+      <circle cx="16" cy="16" r="3.5" fill="#FFD97D"/>
+    </symbol>
+    <symbol id="st-cloud" viewBox="0 0 32 32">
+      <path d="M9 22 a6 6 0 0 1 0 -12 a8 8 0 0 1 15 2 a4 4 0 0 1 0 10 Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="st-sparkle" viewBox="0 0 32 32">
+      <path d="M16 4 L18 14 L28 16 L18 18 L16 28 L14 18 L4 16 L14 14 Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="st-ribbon" viewBox="0 0 32 32">
+      <path d="M16 14 L6 8 L8 18 L16 14 L24 8 L26 18 Z" fill="currentColor"/>
+      <circle cx="16" cy="14" r="3" fill="rgba(255,255,255,0.6)"/>
+    </symbol>
+    <symbol id="st-bunny" viewBox="0 0 32 32">
+      <ellipse cx="11" cy="8"  rx="2.5" ry="6" fill="currentColor"/>
+      <ellipse cx="21" cy="8"  rx="2.5" ry="6" fill="currentColor"/>
+      <circle cx="16" cy="20" r="9" fill="currentColor"/>
+      <circle cx="13" cy="19" r="1.4" fill="#3F2A1E"/>
+      <circle cx="19" cy="19" r="1.4" fill="#3F2A1E"/>
+      <path d="M14.5 23 Q 16 25 17.5 23" stroke="#3F2A1E" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="st-dot-pattern" viewBox="0 0 32 32">
+      <circle cx="6" cy="6" r="2" fill="currentColor"/>
+      <circle cx="16" cy="10" r="2" fill="currentColor"/>
+      <circle cx="26" cy="6" r="2" fill="currentColor"/>
+      <circle cx="11" cy="20" r="2" fill="currentColor"/>
+      <circle cx="22" cy="22" r="2" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="preview-banner">
+  <strong>🎀 시안 페이지 (Cute ver.)</strong>
+  실제 페이지에 적용 전 비교용입니다. 인트로 / 문항 / 결과 화면을 한 페이지에 배치했어요.
+</div>
+
+<div class="preview-grid">
+
+  <!-- ───── INTRO ───── -->
+  <section class="preview-card">
+    <p class="preview-label">01 · Intro</p>
+
+    <svg class="scatter scatter-1 sticker sticker-md sticker-rose"><use href="#st-flower"/></svg>
+    <svg class="scatter scatter-2 sticker sticker-sm sticker-butter"><use href="#st-sparkle"/></svg>
+    <svg class="scatter scatter-3 sticker sticker-md sticker-sky"><use href="#st-cloud"/></svg>
+    <svg class="scatter scatter-4 sticker sticker-sm sticker-lilac"><use href="#st-heart"/></svg>
+
+    <div class="intro-mark-wrap">
+      <svg class="sticker sticker-xl sticker-accent"><use href="#st-bunny"/></svg>
+    </div>
+
+    <p class="intro-eyebrow">입양의날 캠페인 · 5월 11일</p>
+    <h1 class="intro-title">우리 가족은<br><em>어떤 가족</em>일까요?</h1>
+    <p class="intro-desc">
+      8가지 질문에 솔직하게 답해주세요.<br>
+      우리 가족만의 이야기를 들려드릴게요.<br>
+      그리고, 한 가지를 더 알려드립니다.
+    </p>
+    <p class="intro-meta">약 2분 소요 · 정답 없음</p>
+    <div class="intro-cta">
+      <button class="btn-primary">시작하기 →</button>
+    </div>
+  </section>
+
+  <!-- ───── QUESTION ───── -->
+  <section class="preview-card">
+    <p class="preview-label">02 · Question</p>
+
+    <svg class="scatter scatter-2 sticker sticker-sm sticker-rose"><use href="#st-heart"/></svg>
+    <svg class="scatter scatter-3 sticker sticker-md sticker-butter"><use href="#st-flower"/></svg>
+
+    <div class="q-header">
+      <span class="q-num">Q.4 / 8</span>
+      <span class="q-axis">분위기</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <p class="q-text">집안 분위기를 결정하는<br>우리 가족의 필수 아이템은?</p>
+
+    <div class="choices">
+      <div class="choice-card">
+        <span class="choice-tag">A</span>
+        마음이 편안해지는 책과 은은한 조명
+      </div>
+      <div class="choice-card">
+        <span class="choice-tag">B</span>
+        다 함께 즐길 수 있는 보드게임이나 최신형 TV
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── RESULT ───── -->
+  <section class="preview-card">
+    <p class="preview-label">03 · Result</p>
+
+    <svg class="scatter scatter-1 sticker sticker-md sticker-leaf"><use href="#st-flower"/></svg>
+    <svg class="scatter scatter-2 sticker sticker-sm sticker-rose"><use href="#st-sparkle"/></svg>
+    <svg class="scatter scatter-3 sticker sticker-sm sticker-butter"><use href="#st-star"/></svg>
+    <svg class="scatter scatter-4 sticker sticker-md sticker-sky"><use href="#st-cloud"/></svg>
+
+    <p class="result-eyebrow">나의 가족 유형</p>
+
+    <div class="character-bubble">
+      <svg class="sticker sticker-xl sticker-accent" style="width:120px;height:120px;"><use href="#st-bunny"/></svg>
+    </div>
+
+    <div class="result-name-wrap">
+      <span class="result-tag">유형 01 / 11</span>
+      <h2 class="result-name">포근한 도서관 가족</h2>
+      <p class="result-tagline">조용하고 정적인 시간을 즐기는 가족</p>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label">
+        <svg class="sticker sticker-sm sticker-leaf"><use href="#st-flower"/></svg>
+        <span class="pill">가족 소개</span>
+      </div>
+      <div class="traits-box">
+        이 가족은 같은 공간에 있어도 서로의 시간을 침범하지 않습니다. 한 명이 책을 읽거나 잠들어 있으면 자연스럽게 발걸음이 가벼워지고, TV 볼륨도 한 칸씩 줄어들죠. "오늘 좀 피곤해 보이네"를 굳이 입 밖으로 꺼내지 않아도, 묻지 않고 따뜻한 차 한 잔을 슬쩍 건네는 — 그런 조용한 배려가 일상에 스며 있는 가족입니다.
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label">
+        <svg class="sticker sticker-sm sticker-rose"><use href="#st-heart"/></svg>
+        <span class="pill">이게 바로 찐모습</span>
+      </div>
+      <div class="signature-box">
+        거실에 다 같이 있는데 한참 아무도 말이 없다가, 누군가 "차 마실래?" 한 마디에 다들 그제야 고개를 들고 "응" 하고 답할 때. 침묵이 한 번도 어색해 본 적 없다는 걸 새삼 알아채는 그 순간.
+      </div>
+    </div>
+
+    <div class="section-block">
+      <div class="section-label">
+        <svg class="sticker sticker-sm sticker-butter"><use href="#st-sparkle"/></svg>
+        <span class="pill">함께여서 POWER UP</span>
+      </div>
+      <div class="power-box">
+        <strong>[조용한 안식처]</strong> 갈등이 생겨도 곧장 부딪히기보다, 각자 시간을 두고 마음을 정리한 뒤 다시 이야기를 꺼내는 가족입니다. 시끄러운 하루를 보낸 사람에게 아무것도 묻지 않고 옆자리를 내어주는 — 그 조용한 환대가 세상에서 가장 안정감 있는 회복의 자리가 됩니다.
+      </div>
+    </div>
+
+    <div class="bridge-divider">
+      <div class="bridge-line"></div>
+      <span class="bridge-label">사실은</span>
+      <div class="bridge-line"></div>
+    </div>
+
+    <p class="result-bridge">
+      우리 가족처럼 책장 넘기는 소리를 좋아하는 아이도 있습니다.<br>
+      아이가 함께 읽어줄 가족을 만나면, 아이의 세상은 책 속의 주인공처럼 넓어집니다.
+    </p>
+
+    <p class="slogan-line">입양, 한 아이의 온 세상을 만듭니다 ✨</p>
+
+    <div class="result-actions">
+      <button class="btn-primary" style="padding:12px 22px; font-size:13px;">결과 저장하기</button>
+      <button class="btn-ghost">다시 하기</button>
+      <button class="btn-accent">SNS 공유하기</button>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>
