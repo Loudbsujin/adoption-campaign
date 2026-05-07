@@ -340,39 +340,20 @@ body {
 }
 
 .type-img-wrap {
-  position: relative;
-  width: 260px;
-  height: 260px;
+  width: 100%;
   margin: 0 auto 1.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.type-img-bubble {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(160deg, #FEE4D2, #DAEFFB 55%, #E8F2D6);
-  border-radius: 50%;
-  box-shadow: 0 14px 32px rgba(246, 144, 94, 0.18);
-  filter: url(#crayon-soft);
-}
-.type-img-bubble::after {
-  content: "";
-  position: absolute;
-  inset: 14px;
-  border: 2px dashed rgba(255,255,255,0.7);
-  border-radius: 50%;
-  pointer-events: none;
-}
 .type-img {
-  position: relative;
-  z-index: 1;
   display: block;
-  width: 220px;
-  max-height: 230px;
+  width: 100%;
+  max-width: 360px;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 8px 14px rgba(63, 42, 30, 0.10));
+  border-radius: 28px;
+  box-shadow: 0 12px 28px rgba(246, 144, 94, 0.18);
 }
 
 .result-name-wrap {
@@ -654,8 +635,7 @@ body {
 @media (max-width: 480px) {
   .screen { padding: 56px 20px 40px; }
   .q-header { margin-bottom: 1rem; }
-  .type-img-wrap { width: 220px; height: 220px; }
-  .type-img { width: 180px; max-height: 200px; }
+  .type-img { max-width: 320px; border-radius: 24px; }
 }
 </style>
 </head>
@@ -752,7 +732,6 @@ body {
   <p class="result-eyebrow">나의 가족 유형</p>
 
   <div class="type-img-wrap">
-    <div class="type-img-bubble"></div>
     <img id="imgType" class="type-img" alt="" loading="lazy" onerror="this.style.display='none'">
   </div>
 
@@ -1128,7 +1107,7 @@ async function shareSNS() {
 }
 
 function learnMore() {
-  alert('입양 정보 페이지로 이동합니다.\n(랜딩페이지 URL 연결 예정)');
+  window.open('https://ncrc0511.imweb.me/', '_blank', 'noopener');
 }
 
 show('screenIntro');
