@@ -13,32 +13,53 @@
 
 ::selection { background: var(--accent-bg); color: var(--accent-text); }
 
-@keyframes sticker-float {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-5px); }
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50%      { transform: translateY(-6px) rotate(-3deg); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0); }
+  25%      { transform: rotate(-1.5deg); }
+  75%      { transform: rotate(1.5deg); }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .intro-mark { animation: sticker-float 3.6s ease-in-out infinite; }
+  .intro-mark { animation: float-soft 3.6s ease-in-out infinite; }
+  .scatter    { animation: float-soft 4.6s ease-in-out infinite; }
+  .scatter-2  { animation-delay: .8s; }
+  .scatter-3  { animation-delay: 1.4s; }
+  .scatter-4  { animation-delay: .4s; }
 }
 
 :root {
-  --bg:           #FAF0DC;
-  --bg-card:      #FFFCF5;
-  --text:         #3A2814;
-  --text-mid:     #7A6953;
-  --text-light:   #B5A28D;
-  --accent:       #C26B45;
-  --accent-bg:    #F8E5D7;
-  --accent-text:  #8A3D21;
-  --border:       #EAD9C8;
-  --border-hover: #C4B5A5;
-  --progress:     #9BB29A;
+  --bg:           #FFFBF0;
+  --bg-soft:      #FFF4DC;
+  --bg-card:      #FFFFFF;
+  --text:         #3F2A1E;
+  --text-mid:     #8A6E5C;
+  --text-light:   #C2A99A;
 
-  --sky:          #C7DEED;
-  --butter:       #F8E198;
-  --rose:         #F2A5B6;
-  --leaf:         #9BB29A;
+  --accent:       #F6905E;
+  --accent-bg:    #FEE4D2;
+  --accent-text:  #C8602B;
+
+  --green:        #99CC66;
+  --green-bg:     #E8F2D6;
+  --green-text:   #5A8A33;
+
+  --blue:         #38B4E7;
+  --blue-bg:      #DAEFFB;
+  --blue-text:    #1A7BAE;
+
+  --border:       #F8E8D0;
+  --border-hover: #ECCFA8;
+  --progress:     var(--accent);
+
+  --rose:    #F8B69A;
+  --butter:  #FFD97D;
+  --sky:     #A8D9F0;
+  --leaf:    #C5E0A2;
+  --cream:   #FFE9C4;
 
   --display: 'Gowun Batang', Georgia, serif;
   --body:    'Gowun Dodum', system-ui, sans-serif;
@@ -64,13 +85,13 @@ body {
 .progress-track {
   position: fixed;
   top: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--border);
+  height: 5px;
+  background: var(--bg-soft);
   z-index: 100;
 }
 .progress-fill {
   height: 100%;
-  background: var(--progress);
+  background: linear-gradient(90deg, var(--green), var(--accent));
   border-radius: 0 999px 999px 0;
   transition: width 0.55s cubic-bezier(.4,0,.2,1);
 }
@@ -88,6 +109,7 @@ body {
   transform: translateY(20px);
   transition: opacity .5s ease, transform .5s cubic-bezier(.4,0,.2,1);
   pointer-events: none;
+  position: relative;
 }
 .screen.visible {
   opacity: 1;
@@ -95,62 +117,118 @@ body {
   pointer-events: auto;
 }
 .screen.hidden { display: none; }
+.screen > * { position: relative; z-index: 1; }
+
+/* ── Scattered decoration ── */
+.scatter {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+.scatter-1 { top: 10%; left: 6%; }
+.scatter-2 { top: 14%; right: 8%; }
+.scatter-3 { bottom: 22%; left: 8%; }
+.scatter-4 { bottom: 28%; right: 6%; }
 
 /* ── Intro ── */
-.eyebrow {
+.intro-mark {
+  display: block;
+  margin: 0 auto 1.25rem;
+}
+.intro-eyebrow {
+  font-family: var(--ui);
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: .12em;
-  color: var(--text-light);
+  font-weight: 600;
+  letter-spacing: .14em;
+  color: var(--accent);
   text-transform: uppercase;
-  margin-bottom: 2.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .intro-title {
-  font-family: var(--serif);
-  font-size: clamp(32px, 7vw, 48px);
-  font-weight: 600;
-  line-height: 1.25;
+  font-family: var(--body);
+  font-size: clamp(28px, 6.5vw, 42px);
+  font-weight: 700;
+  line-height: 1.4;
   color: var(--text);
+  text-align: center;
   margin-bottom: 1.75rem;
   word-break: keep-all;
 }
+.intro-title em {
+  font-style: normal;
+  position: relative;
+  display: inline-block;
+  padding: 0 6px;
+}
+.intro-title em::after {
+  content: "";
+  position: absolute;
+  left: -2px; right: -2px;
+  bottom: 4px;
+  height: 14px;
+  background: repeating-linear-gradient(
+    96deg,
+    var(--butter) 0 8px,
+    rgba(255, 217, 125, 0.65) 8px 14px
+  );
+  filter: url(#crayon-rough);
+  opacity: 0.85;
+  z-index: -1;
+  border-radius: 2px;
+}
 
 .intro-desc {
-  font-size: 15px;
+  font-size: 14.5px;
   color: var(--text-mid);
-  line-height: 1.9;
-  margin-bottom: 2rem;
+  line-height: 1.95;
+  text-align: center;
+  margin-bottom: 1.25rem;
   word-break: keep-all;
   max-width: 400px;
-  font-weight: 300;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 400;
 }
 
 .intro-meta {
+  font-family: var(--ui);
   font-size: 12px;
   color: var(--text-light);
-  margin-bottom: 3rem;
+  text-align: center;
+  margin-bottom: 2.25rem;
   letter-spacing: .04em;
+}
+
+.intro-cta {
+  display: flex;
+  justify-content: center;
 }
 
 .btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: var(--text);
-  color: var(--bg);
+  background: var(--accent);
+  color: #fff;
   border: none;
-  padding: 14px 30px;
+  padding: 16px 32px;
   font-family: var(--ui);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 14.5px;
+  font-weight: 600;
   cursor: pointer;
   letter-spacing: .02em;
-  transition: background .2s, transform .15s, box-shadow .2s;
-  border-radius: 14px;
-  box-shadow: 0 4px 14px rgba(58, 40, 20, 0.12);
+  transition: transform .2s, box-shadow .2s;
+  border-radius: 999px;
+  box-shadow:
+    0 6px 18px rgba(246, 144, 94, 0.40),
+    inset 0 -2px 0 rgba(200, 96, 43, 0.30);
 }
-.btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(246, 144, 94, 0.50);
+}
 .btn-primary:active { transform: translateY(0); }
 
 /* ── Question ── */
@@ -158,20 +236,25 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 3.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .q-num {
+  font-family: var(--ui);
   font-size: 12px;
-  color: var(--text-light);
-  letter-spacing: .06em;
+  font-weight: 600;
+  color: var(--accent-text);
+  background: var(--accent-bg);
+  padding: 6px 14px;
+  border-radius: 999px;
+  letter-spacing: .04em;
 }
 
 .q-axis {
   font-family: var(--ui);
   font-size: 11px;
   color: var(--text-mid);
-  padding: 4px 12px;
+  padding: 6px 14px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -179,169 +262,247 @@ body {
 }
 
 .q-text {
-  font-family: var(--serif);
-  font-size: clamp(17px, 3.5vw, 22px);
-  font-weight: 400;
+  font-family: var(--body);
+  font-size: clamp(18px, 4vw, 24px);
+  font-weight: 600;
   color: var(--text);
-  line-height: 1.7;
-  margin-bottom: 2.5rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  text-align: center;
   word-break: keep-all;
 }
 
 .choices {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .choice-card {
   background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
+  border: 2px solid var(--border);
+  border-radius: 20px;
   padding: 20px 22px;
   cursor: pointer;
   transition: border-color .18s, background .18s, transform .15s, box-shadow .2s;
   word-break: keep-all;
-  box-shadow: 0 2px 8px rgba(58, 40, 20, 0.04);
+  box-shadow: 0 2px 8px rgba(63, 42, 30, 0.04);
 }
 .choice-card:hover {
-  border-color: var(--border-hover);
-  background: #FEFAF5;
-  transform: translateX(3px);
-  box-shadow: 0 6px 18px rgba(58, 40, 20, 0.08);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(246, 144, 94, 0.20);
+  animation: wiggle .5s ease;
 }
 .choice-card.selected {
   background: var(--accent-bg);
   border-color: var(--accent);
-  transform: translateX(0);
-  box-shadow: 0 4px 14px rgba(194, 107, 69, 0.18);
+  transform: translateY(0);
+  box-shadow: 0 6px 18px rgba(246, 144, 94, 0.30);
+}
+.choice-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px; height: 26px;
+  background: var(--accent-bg);
+  color: var(--accent-text);
+  font-family: var(--ui);
+  font-weight: 700;
+  font-size: 12px;
+  border-radius: 999px;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+.choice-card.selected .choice-tag {
+  background: var(--accent);
+  color: #fff;
 }
 .choice-body {
-  font-size: 14px;
+  font-size: 14.5px;
   color: var(--text-mid);
   line-height: 1.75;
+  display: flex;
+  align-items: center;
 }
 .choice-card.selected .choice-body { color: var(--accent-text); }
 
 /* ── Result ── */
+.result-eyebrow {
+  font-family: var(--ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  color: var(--text-light);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.type-img-wrap {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  margin: 0 auto 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.type-img-bubble {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, #FEE4D2, #DAEFFB 55%, #E8F2D6);
+  border-radius: 50%;
+  box-shadow: 0 14px 32px rgba(246, 144, 94, 0.18);
+  filter: url(#crayon-soft);
+}
+.type-img-bubble::after {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border: 2px dashed rgba(255,255,255,0.7);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.type-img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 220px;
+  max-height: 230px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 14px rgba(63, 42, 30, 0.10));
+}
+
+.result-name-wrap {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
 .result-tag {
   display: inline-block;
+  font-family: var(--ui);
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: .1em;
-  color: var(--accent);
-  margin-bottom: .75rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  color: var(--accent-text);
+  background: var(--accent-bg);
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 14px;
   text-transform: uppercase;
 }
 
 .result-name {
-  font-family: var(--serif);
-  font-size: clamp(24px, 5.5vw, 36px);
-  font-weight: 600;
+  font-family: var(--body);
+  font-size: clamp(24px, 5.5vw, 32px);
+  font-weight: 700;
   color: var(--text);
-  line-height: 1.3;
-  margin-bottom: 1.75rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  padding-bottom: 6px;
   word-break: keep-all;
 }
 
 .result-tagline {
-  font-size: 14px;
-  color: var(--accent);
+  font-family: var(--ui);
+  font-size: 13.5px;
+  color: var(--text-mid);
   font-weight: 500;
-  letter-spacing: .02em;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
   word-break: keep-all;
 }
 
 .result-traits {
-  font-size: 15px;
+  font-size: 14.5px;
   color: var(--text-mid);
   line-height: 1.95;
   word-break: keep-all;
-  font-weight: 300;
-  margin-bottom: 2.5rem;
+  font-weight: 400;
+  margin-bottom: 1.75rem;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 22px;
+  padding: 20px 22px;
+  box-shadow: 0 4px 14px rgba(246, 144, 94, 0.06);
 }
 
 .section-label {
   font-family: var(--ui);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: .12em;
-  color: var(--text-light);
-  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-text);
   margin-bottom: .75rem;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+}
+.section-label .pill {
+  background: var(--accent-bg);
+  padding: 5px 12px;
+  border-radius: 999px;
 }
 
-.type-img {
-  display: block;
-  width: 100%;
-  max-width: 320px;
-  height: auto;
-  margin: 0 auto 1.75rem;
-}
-
-.section-img {
-  display: block;
-  width: 100%;
-  max-width: 220px;
-  height: auto;
-  margin: 0 auto 1rem;
-}
-
-/* ── Stickers (가족 모티프 SVG) ── */
+/* ── Stickers ── */
 .sticker {
   display: inline-block;
   vertical-align: middle;
   flex-shrink: 0;
 }
-.sticker-sm { width: 16px; height: 16px; }
-.sticker-md { width: 24px; height: 24px; }
-.sticker-lg { width: 36px; height: 36px; }
-.sticker-xl { width: 56px; height: 56px; }
+.sticker-sm { width: 18px; height: 18px; }
+.sticker-md { width: 28px; height: 28px; }
+.sticker-lg { width: 44px; height: 44px; }
+.sticker-xl { width: 72px; height: 72px; }
 
 .sticker-leaf   { color: var(--leaf); }
 .sticker-rose   { color: var(--rose); }
-.sticker-butter { color: #E8C04D; }
+.sticker-butter { color: var(--butter); }
 .sticker-sky    { color: var(--sky); }
 .sticker-accent { color: var(--accent); }
-
-.intro-mark {
-  display: block;
-  margin: 0 auto 1.25rem 0;
-}
-
-.slogan-mark {
-  display: block;
-  margin: 1.5rem auto 0.5rem;
-}
-
-.bridge-leaf-right { transform: scaleX(-1); }
+.sticker-green  { color: var(--green); }
+.sticker-blue   { color: var(--blue); }
 
 .signature-box {
   background: var(--bg-card);
-  border-left: 3px solid var(--leaf);
-  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 22px;
   padding: 20px 22px;
-  font-size: 14px;
-  line-height: 1.85;
+  font-size: 14.5px;
+  line-height: 1.95;
   color: var(--text-mid);
   word-break: keep-all;
   font-weight: 400;
-  box-shadow: 0 2px 10px rgba(58, 40, 20, 0.04);
+  box-shadow: 0 4px 14px rgba(246, 144, 94, 0.06);
 }
 
 .power-box {
-  background: var(--accent-bg);
-  border-radius: 14px;
+  background: linear-gradient(145deg, #F1F8E5, #E5F2FB);
+  border: 1.5px solid var(--green);
+  border-radius: 22px;
   padding: 20px 22px;
-  font-size: 14px;
-  line-height: 1.85;
-  color: var(--accent-text);
+  font-size: 14.5px;
+  line-height: 1.95;
+  color: var(--green-text);
   word-break: keep-all;
-  box-shadow: 0 2px 10px rgba(194, 107, 69, 0.08);
+  box-shadow: 0 4px 14px rgba(153, 204, 102, 0.12);
+}
+.power-box strong { color: var(--accent-text); }
+
+/* ── Crayon underline ── */
+.crayon-underline {
+  position: relative;
+  display: inline-block;
+}
+.crayon-underline::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -8px;
+  height: 8px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'><path d='M2 5 Q 12 1 22 4 T 42 4 T 62 5 T 82 4 T 98 4' stroke='%23F6905E' stroke-width='2.4' fill='none' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  filter: url(#crayon-rough);
 }
 
 .reveal {
@@ -365,40 +526,47 @@ body {
 .bridge-divider {
   display: flex;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 1.75rem;
+  gap: 12px;
+  margin: 1.75rem 0 1.25rem;
 }
 .bridge-line {
   flex: 1;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--leaf) 30%, var(--leaf) 70%, transparent);
-  opacity: 0.5;
+  height: 1.5px;
+  background: linear-gradient(to right, transparent, var(--blue) 30%, var(--blue) 70%, transparent);
+  opacity: 0.55;
 }
 .bridge-label {
+  font-family: var(--ui);
   font-size: 11px;
-  color: var(--text-light);
-  letter-spacing: .1em;
+  font-weight: 600;
+  color: var(--blue-text);
+  letter-spacing: .12em;
   white-space: nowrap;
 }
 
 .result-bridge {
-  font-size: 15px;
+  font-size: 14.5px;
   color: var(--text);
   line-height: 1.95;
   word-break: keep-all;
-  font-weight: 300;
-  margin-bottom: 1rem;
+  font-weight: 400;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .slogan-line {
-  font-family: var(--serif);
+  font-family: var(--body);
   font-size: clamp(15px, 2.6vw, 17px);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--accent-text);
-  line-height: 1.6;
+  background: var(--accent-bg);
+  border-radius: 999px;
+  padding: 14px 24px;
+  text-align: center;
   margin-top: 1.25rem;
   letter-spacing: .01em;
   word-break: keep-all;
+  filter: url(#crayon-soft);
 }
 
 .result-actions {
@@ -406,44 +574,45 @@ body {
   gap: 10px;
   margin-top: 2.5rem;
   flex-wrap: wrap;
+  justify-content: center;
   opacity: 0;
   transition: opacity .5s ease 1.5s;
 }
 .result-actions.visible { opacity: 1; }
 
 .btn-ghost {
-  background: transparent;
+  background: var(--bg-card);
   color: var(--text-mid);
-  border: 1px solid var(--border);
-  padding: 11px 20px;
+  border: 1.5px solid var(--border);
+  padding: 12px 22px;
   font-family: var(--ui);
   font-size: 13px;
   cursor: pointer;
-  border-radius: 12px;
-  transition: border-color .2s, color .2s, background .2s, transform .15s;
+  border-radius: 999px;
+  transition: border-color .2s, color .2s, transform .15s;
 }
 .btn-ghost:hover {
   border-color: var(--text-mid);
   color: var(--text);
-  background: var(--bg-card);
   transform: translateY(-1px);
 }
 
 .btn-accent {
-  background: transparent;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  padding: 11px 20px;
+  background: var(--accent-bg);
+  color: var(--accent-text);
+  border: 1.5px solid var(--accent);
+  padding: 12px 22px;
   font-family: var(--ui);
   font-size: 13px;
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 999px;
   transition: background .2s, transform .15s, box-shadow .2s;
 }
 .btn-accent:hover {
-  background: var(--accent-bg);
+  background: var(--accent);
+  color: #fff;
   transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(194, 107, 69, 0.15);
+  box-shadow: 0 6px 14px rgba(246, 144, 94, 0.30);
 }
 
 .campaign-footer {
@@ -456,11 +625,17 @@ body {
   opacity: 0;
   transition: opacity .5s ease 2s;
   word-break: keep-all;
+  text-align: center;
 }
 .campaign-footer.visible { opacity: 1; }
 .footer-eyebrow {
   margin-bottom: .5rem;
-  color: var(--text-light);
+  color: var(--accent);
+  font-family: var(--ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
 }
 .footer-title {
   font-size: 13px;
@@ -473,12 +648,14 @@ body {
 @media (min-width: 580px) {
   .choices { flex-direction: row; }
   .choice-card { flex: 1; }
-  .choice-card:hover { transform: translateY(-2px); }
+  .choice-card:hover { transform: translateY(-3px); }
 }
 
 @media (max-width: 480px) {
   .screen { padding: 56px 20px 40px; }
-  .q-header { margin-bottom: 2.5rem; }
+  .q-header { margin-bottom: 1rem; }
+  .type-img-wrap { width: 220px; height: 220px; }
+  .type-img { width: 180px; max-height: 200px; }
 }
 </style>
 </head>
@@ -486,9 +663,19 @@ body {
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
+    <filter id="crayon-rough" x="-5%" y="-30%" width="110%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2"/>
+    </filter>
+    <filter id="crayon-soft" x="-5%" y="-15%" width="110%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="1" seed="5" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.1"/>
+    </filter>
+
     <symbol id="sticker-house" viewBox="0 0 32 32">
       <path d="M16 3 L3 14 L3 27 a2 2 0 0 0 2 2 L27 29 a2 2 0 0 0 2 -2 L29 14 Z" fill="currentColor"/>
-      <path d="M13 19 L13 29 L19 29 L19 19 Z" fill="rgba(255,255,255,0.5)"/>
+      <path d="M13 19 L13 29 L19 29 L19 19 Z" fill="rgba(255,255,255,0.55)"/>
+      <circle cx="11" cy="22" r="1.2" fill="rgba(255,255,255,0.55)"/>
     </symbol>
     <symbol id="sticker-leaf" viewBox="0 0 32 32">
       <path d="M6 23 C 6 10, 17 4, 27 4 C 27 17, 18 28, 6 23 Z" fill="currentColor"/>
@@ -500,6 +687,23 @@ body {
     <symbol id="sticker-star" viewBox="0 0 32 32">
       <path d="M16 4 L19 12 L28 13 L21 19 L23 28 L16 23 L9 28 L11 19 L4 13 L13 12 Z" fill="currentColor"/>
     </symbol>
+    <symbol id="sticker-flower" viewBox="0 0 32 32">
+      <circle cx="16" cy="9"  r="5" fill="currentColor"/>
+      <circle cx="9"  cy="16" r="5" fill="currentColor"/>
+      <circle cx="23" cy="16" r="5" fill="currentColor"/>
+      <circle cx="16" cy="23" r="5" fill="currentColor"/>
+      <circle cx="16" cy="16" r="3.5" fill="#FFD97D"/>
+    </symbol>
+    <symbol id="sticker-cloud" viewBox="0 0 32 32">
+      <path d="M9 22 a6 6 0 0 1 0 -12 a8 8 0 0 1 15 2 a4 4 0 0 1 0 10 Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="sticker-sparkle" viewBox="0 0 32 32">
+      <path d="M16 4 L18 14 L28 16 L18 18 L16 28 L14 18 L4 16 L14 14 Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="sticker-ribbon" viewBox="0 0 32 32">
+      <path d="M16 14 L6 8 L8 18 L16 14 L24 8 L26 18 Z" fill="currentColor"/>
+      <circle cx="16" cy="14" r="3" fill="rgba(255,255,255,0.6)"/>
+    </symbol>
   </defs>
 </svg>
 
@@ -509,15 +713,23 @@ body {
 
 <!-- Intro -->
 <div class="screen" id="screenIntro">
-  <svg class="sticker sticker-xl sticker-leaf intro-mark" aria-hidden="true"><use href="#sticker-house"/></svg>
-  <h1 class="intro-title">우리 가족은<br>어떤 가족일까요?</h1>
+  <svg class="scatter scatter-1 sticker sticker-md sticker-rose" aria-hidden="true"><use href="#sticker-flower"/></svg>
+  <svg class="scatter scatter-2 sticker sticker-sm sticker-butter" aria-hidden="true"><use href="#sticker-sparkle"/></svg>
+  <svg class="scatter scatter-3 sticker sticker-md sticker-sky" aria-hidden="true"><use href="#sticker-cloud"/></svg>
+  <svg class="scatter scatter-4 sticker sticker-sm sticker-leaf" aria-hidden="true"><use href="#sticker-heart"/></svg>
+
+  <svg class="sticker sticker-xl sticker-accent intro-mark" aria-hidden="true"><use href="#sticker-house"/></svg>
+  <p class="intro-eyebrow">입양의날 캠페인 · 5월 11일</p>
+  <h1 class="intro-title">우리 가족은<br><em>어떤 가족</em>일까요?</h1>
   <p class="intro-desc">
     8가지 질문에 솔직하게 답해주세요.<br>
     우리 가족만의 이야기를 들려드릴게요.<br>
     그리고, 한 가지를 더 알려드립니다.
   </p>
   <p class="intro-meta">약 2분 소요 &nbsp;·&nbsp; 정답 없음</p>
-  <button class="btn-primary" onclick="startTest()">시작하기 &nbsp;→</button>
+  <div class="intro-cta">
+    <button class="btn-primary" onclick="startTest()">시작하기 &nbsp;→</button>
+  </div>
 </div>
 
 <!-- Question -->
@@ -532,38 +744,50 @@ body {
 
 <!-- Result -->
 <div class="screen hidden" id="screenResult">
-  <p class="eyebrow">나의 가족 유형</p>
-  <img id="imgType" class="type-img" alt="" loading="lazy" onerror="this.style.display='none'">
-  <p class="result-tag" id="rTag"></p>
-  <h2 class="result-name" id="rName"></h2>
-  <p class="result-tagline" id="rTagline"></p>
-  <img id="imgTraits" class="section-img" alt="" loading="lazy" onerror="this.style.display='none'">
+  <svg class="scatter scatter-1 sticker sticker-md sticker-leaf" aria-hidden="true"><use href="#sticker-flower"/></svg>
+  <svg class="scatter scatter-2 sticker sticker-sm sticker-rose" aria-hidden="true"><use href="#sticker-sparkle"/></svg>
+  <svg class="scatter scatter-3 sticker sticker-sm sticker-butter" aria-hidden="true"><use href="#sticker-star"/></svg>
+  <svg class="scatter scatter-4 sticker sticker-md sticker-sky" aria-hidden="true"><use href="#sticker-cloud"/></svg>
+
+  <p class="result-eyebrow">나의 가족 유형</p>
+
+  <div class="type-img-wrap">
+    <div class="type-img-bubble"></div>
+    <img id="imgType" class="type-img" alt="" loading="lazy" onerror="this.style.display='none'">
+  </div>
+
+  <div class="result-name-wrap">
+    <p class="result-tag" id="rTag"></p>
+    <h2 class="result-name"><span class="crayon-underline" id="rName"></span></h2>
+    <p class="result-tagline" id="rTagline"></p>
+  </div>
+
   <p class="result-traits" id="rTraits"></p>
 
   <div class="reveal" id="signatureWrap">
-    <img id="imgSignature" class="section-img" alt="" loading="lazy" onerror="this.style.display='none'">
-    <p class="section-label"><svg class="sticker sticker-sm sticker-leaf" aria-hidden="true"><use href="#sticker-leaf"/></svg>이게 바로 찐모습</p>
+    <p class="section-label">
+      <svg class="sticker sticker-sm sticker-rose" aria-hidden="true"><use href="#sticker-heart"/></svg>
+      <span class="pill">이게 바로 찐모습</span>
+    </p>
     <div class="signature-box" id="rSignature"></div>
   </div>
 
   <div class="reveal" id="powerWrap">
-    <img id="imgPower" class="section-img" alt="" loading="lazy" onerror="this.style.display='none'">
-    <p class="section-label"><svg class="sticker sticker-sm sticker-rose" aria-hidden="true"><use href="#sticker-heart"/></svg>함께여서 POWER UP</p>
+    <p class="section-label">
+      <svg class="sticker sticker-sm sticker-butter" aria-hidden="true"><use href="#sticker-sparkle"/></svg>
+      <span class="pill">함께여서 POWER UP</span>
+    </p>
     <div class="power-box" id="rPower"></div>
   </div>
 
   <div class="bridge-wrap" id="bridgeWrap">
     <div class="bridge-divider">
-      <svg class="sticker sticker-sm sticker-leaf" aria-hidden="true"><use href="#sticker-leaf"/></svg>
       <div class="bridge-line"></div>
       <span class="bridge-label">사실은</span>
       <div class="bridge-line"></div>
-      <svg class="sticker sticker-sm sticker-leaf bridge-leaf-right" aria-hidden="true"><use href="#sticker-leaf"/></svg>
     </div>
     <p class="result-bridge" id="rBridge"></p>
-    <img id="imgSlogan" class="section-img" alt="" loading="lazy" onerror="this.style.display='none'">
-    <svg class="sticker sticker-md sticker-butter slogan-mark" aria-hidden="true"><use href="#sticker-star"/></svg>
-    <p class="slogan-line">입양, 한 아이의 온 세상을 만듭니다</p>
+    <p class="slogan-line">✨ 입양, 한 아이의 온 세상을 만듭니다 ✨</p>
   </div>
 
   <div class="result-actions" id="rActions">
@@ -574,7 +798,7 @@ body {
   </div>
 
   <div class="campaign-footer" id="rFooter">
-    <p class="eyebrow footer-eyebrow">입양의날 캠페인 &nbsp;·&nbsp; 5월 11일</p>
+    <p class="footer-eyebrow">입양의날 캠페인 &nbsp;·&nbsp; 5월 11일</p>
     <p class="footer-title">입양의날 인식개선 캠페인</p>
     지금 이 순간에도 가족을 기다리는 아이들이 있습니다.<br>
     한 아이의 온 세상이 되어줄 수 있는 가족을 기다리고 있어요.
@@ -739,7 +963,7 @@ function renderQuestion() {
   [{ t: q.a, v: 'A' }, { t: q.b, v: 'B' }].forEach(opt => {
     const card = document.createElement('div');
     card.className = 'choice-card';
-    card.innerHTML = `<div class="choice-body">${opt.t}</div>`;
+    card.innerHTML = `<div class="choice-body"><span class="choice-tag">${opt.v}</span><span>${opt.t}</span></div>`;
     card.addEventListener('click', () => pick(opt.v, card));
     container.appendChild(card);
   });
@@ -800,12 +1024,7 @@ function showResult() {
     .map(line => line.replace(/[&<>]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch])))
     .join('<br>');
 
-  const sectionBase = `images/sections/${r.slug}`;
-  setImg('imgType',      `images/types/${r.slug}.png`, `${r.name} 일러스트`);
-  setImg('imgTraits',    `${sectionBase}/traits.png`,    '');
-  setImg('imgSignature', `${sectionBase}/signature.png`, '');
-  setImg('imgPower',     `${sectionBase}/power.png`,     '');
-  setImg('imgSlogan',    `${sectionBase}/slogan.png`,    '');
+  setImg('imgType', `images/types/${r.slug}.png`, `${r.name} 일러스트`);
 
   ['signatureWrap', 'powerWrap', 'bridgeWrap', 'rActions', 'rFooter'].forEach(id =>
     document.getElementById(id).classList.remove('visible')
