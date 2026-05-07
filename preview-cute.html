@@ -12,26 +12,34 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* ── 시안 컬러 (파스텔 핑크 중심) ── */
-  --bg:           #FFF7F0;          /* peachy cream */
-  --bg-soft:      #FFEFE8;
+  /* ── 시안 컬러 (오렌지·그린·블루 + 크림 배경) ── */
+  --bg:           #FFFBF0;          /* warm cream */
+  --bg-soft:      #FFF4DC;
   --bg-card:      #FFFFFF;
   --text:         #3F2A1E;
   --text-mid:     #8A6E5C;
   --text-light:   #C2A99A;
 
-  --accent:       #ED8B91;          /* rose-pink */
-  --accent-bg:    #FFE5EB;
-  --accent-text:  #C44A65;
+  --accent:       #F6905E;          /* orange (point) */
+  --accent-bg:    #FEE4D2;
+  --accent-text:  #C8602B;
 
-  --border:       #FCE4E0;
-  --border-hover: #F4C9C4;
+  --green:        #99CC66;
+  --green-bg:     #E8F2D6;
+  --green-text:   #5A8A33;
 
-  --rose:    #FFB5C5;
+  --blue:         #38B4E7;
+  --blue-bg:      #DAEFFB;
+  --blue-text:    #1A7BAE;
+
+  --border:       #F8E8D0;
+  --border-hover: #ECCFA8;
+
+  --rose:    #F8B69A;               /* soft orange */
   --butter:  #FFD97D;
-  --sky:     #BFE0F0;
-  --leaf:    #BBD4B0;
-  --lilac:   #DCC8F0;
+  --sky:     #A8D9F0;               /* soft blue */
+  --leaf:    #C5E0A2;               /* soft green */
+  --cream:   #FFE9C4;
 
   --display: 'Gowun Batang', Georgia, serif;
   --body:    'Gowun Dodum', system-ui, sans-serif;
@@ -76,7 +84,7 @@ body {
   border-radius: 32px;
   padding: 56px 28px;
   box-shadow:
-    0 12px 40px rgba(237, 139, 145, 0.10),
+    0 12px 40px rgba(246, 144, 94, 0.10),
     0 2px 8px rgba(63, 42, 30, 0.04);
   position: relative;
   overflow: hidden;
@@ -91,12 +99,12 @@ body {
 .preview-card::before {
   width: 140px; height: 140px;
   top: -40px; right: -40px;
-  background: radial-gradient(circle, rgba(255, 217, 125, 0.35), transparent 70%);
+  background: radial-gradient(circle, rgba(56, 180, 231, 0.20), transparent 70%);
 }
 .preview-card::after {
   width: 180px; height: 180px;
   bottom: -60px; left: -60px;
-  background: radial-gradient(circle, rgba(255, 181, 197, 0.30), transparent 70%);
+  background: radial-gradient(circle, rgba(153, 204, 102, 0.22), transparent 70%);
 }
 
 .preview-label {
@@ -176,8 +184,26 @@ body {
 }
 .intro-title em {
   font-style: normal;
-  background: linear-gradient(transparent 60%, var(--butter) 60%, var(--butter) 92%, transparent 92%);
-  padding: 0 4px;
+  position: relative;
+  display: inline-block;
+  padding: 0 6px;
+}
+.intro-title em::after {
+  content: "";
+  position: absolute;
+  left: -2px; right: -2px;
+  bottom: 4px;
+  height: 14px;
+  background:
+    repeating-linear-gradient(
+      96deg,
+      var(--butter) 0 8px,
+      rgba(255, 217, 125, 0.65) 8px 14px
+    );
+  filter: url(#crayon-rough);
+  opacity: 0.85;
+  z-index: -1;
+  border-radius: 2px;
 }
 .intro-desc {
   font-size: 14.5px;
@@ -214,11 +240,11 @@ body {
   letter-spacing: .02em;
   border-radius: 999px;
   box-shadow:
-    0 6px 18px rgba(237, 139, 145, 0.40),
-    inset 0 -2px 0 rgba(196, 74, 101, 0.25);
+    0 6px 18px rgba(246, 144, 94, 0.40),
+    inset 0 -2px 0 rgba(200, 96, 43, 0.30);
   transition: transform .2s, box-shadow .2s;
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(237, 139, 145, 0.45); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(246, 144, 94, 0.50); }
 
 /* ── QUESTION ── */
 .q-header {
@@ -256,7 +282,7 @@ body {
 .progress-fill {
   width: 50%;
   height: 100%;
-  background: linear-gradient(90deg, var(--rose), var(--accent));
+  background: linear-gradient(90deg, var(--green), var(--accent));
   border-radius: 999px;
 }
 .q-text {
@@ -291,7 +317,7 @@ body {
 .choice-card:hover {
   border-color: var(--accent);
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(237, 139, 145, 0.18);
+  box-shadow: 0 10px 24px rgba(246, 144, 94, 0.20);
   animation: wiggle .5s ease;
 }
 .choice-card .choice-tag {
@@ -342,8 +368,9 @@ body {
   font-size: clamp(24px, 5.5vw, 32px);
   font-weight: 700;
   color: var(--text);
-  line-height: 1.35;
-  margin-bottom: .75rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  padding-bottom: 6px;
   word-break: keep-all;
 }
 .result-tagline {
@@ -359,11 +386,11 @@ body {
   justify-content: center;
   margin: 0 auto 1.75rem;
   width: 200px; height: 200px;
-  background: linear-gradient(160deg, #FFE5EB, #FFF4D6);
+  background: linear-gradient(160deg, #FEE4D2, #DAEFFB);
   border-radius: 50%;
   align-items: center;
   position: relative;
-  box-shadow: 0 12px 28px rgba(237, 139, 145, 0.22);
+  box-shadow: 0 12px 28px rgba(246, 144, 94, 0.20);
 }
 .character-bubble::after {
   content: "";
@@ -402,13 +429,14 @@ body {
   line-height: 1.95;
   color: var(--text-mid);
   word-break: keep-all;
-  box-shadow: 0 4px 14px rgba(237, 139, 145, 0.06);
+  box-shadow: 0 4px 14px rgba(246, 144, 94, 0.06);
 }
 .power-box {
-  background: linear-gradient(145deg, #FFF4F6, #FFFAEC);
-  border-color: var(--rose);
-  color: var(--accent-text);
+  background: linear-gradient(145deg, #F1F8E5, #E5F2FB);
+  border-color: var(--green);
+  color: var(--green-text);
 }
+.power-box strong { color: var(--accent-text); }
 
 .bridge-divider {
   display: flex; align-items: center; gap: 12px;
@@ -416,14 +444,14 @@ body {
 }
 .bridge-line {
   flex: 1; height: 1.5px;
-  background: linear-gradient(to right, transparent, var(--rose) 30%, var(--rose) 70%, transparent);
-  opacity: 0.6;
+  background: linear-gradient(to right, transparent, var(--blue) 30%, var(--blue) 70%, transparent);
+  opacity: 0.55;
 }
 .bridge-label {
   font-family: var(--ui);
   font-size: 11px;
   letter-spacing: .12em;
-  color: var(--accent);
+  color: var(--blue-text);
   font-weight: 600;
 }
 .result-bridge {
@@ -445,7 +473,26 @@ body {
   padding: 14px 24px;
   margin-top: 1.25rem;
   word-break: keep-all;
+  filter: url(#crayon-soft);
 }
+
+/* ── Crayon underline (handdrawn squiggle) ── */
+.crayon-underline {
+  position: relative;
+  display: inline-block;
+}
+.crayon-underline::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -8px;
+  height: 8px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'><path d='M2 5 Q 12 1 22 4 T 42 4 T 62 5 T 82 4 T 98 4' stroke='%23F6905E' stroke-width='2.4' fill='none' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  filter: url(#crayon-rough);
+}
+.crayon-underline.green::after  { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'><path d='M2 5 Q 12 1 22 4 T 42 4 T 62 5 T 82 4 T 98 4' stroke='%2399CC66' stroke-width='2.4' fill='none' stroke-linecap='round'/></svg>"); }
+.crayon-underline.blue::after   { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'><path d='M2 5 Q 12 1 22 4 T 42 4 T 62 5 T 82 4 T 98 4' stroke='%2338B4E7' stroke-width='2.4' fill='none' stroke-linecap='round'/></svg>"); }
 
 .result-actions {
   display: flex;
@@ -488,6 +535,17 @@ body {
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
+    <!-- 크레파스 거친 질감 (강) -->
+    <filter id="crayon-rough" x="-5%" y="-30%" width="110%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2"/>
+    </filter>
+    <!-- 크레파스 거친 질감 (약) -->
+    <filter id="crayon-soft" x="-5%" y="-15%" width="110%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="1" seed="5" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.1"/>
+    </filter>
+
     <symbol id="st-heart" viewBox="0 0 32 32">
       <path d="M16 27 C 14 23, 4 19, 4 11 C 4 7, 7 4, 11 4 C 13 4, 16 7, 16 9 C 16 7, 19 4, 21 4 C 25 4, 28 7, 28 11 C 28 19, 18 23, 16 27 Z" fill="currentColor"/>
     </symbol>
@@ -511,13 +569,10 @@ body {
       <path d="M16 14 L6 8 L8 18 L16 14 L24 8 L26 18 Z" fill="currentColor"/>
       <circle cx="16" cy="14" r="3" fill="rgba(255,255,255,0.6)"/>
     </symbol>
-    <symbol id="st-bunny" viewBox="0 0 32 32">
-      <ellipse cx="11" cy="8"  rx="2.5" ry="6" fill="currentColor"/>
-      <ellipse cx="21" cy="8"  rx="2.5" ry="6" fill="currentColor"/>
-      <circle cx="16" cy="20" r="9" fill="currentColor"/>
-      <circle cx="13" cy="19" r="1.4" fill="#3F2A1E"/>
-      <circle cx="19" cy="19" r="1.4" fill="#3F2A1E"/>
-      <path d="M14.5 23 Q 16 25 17.5 23" stroke="#3F2A1E" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <symbol id="st-house" viewBox="0 0 32 32">
+      <path d="M16 3 L3 14 L3 27 a2 2 0 0 0 2 2 L27 29 a2 2 0 0 0 2 -2 L29 14 Z" fill="currentColor"/>
+      <path d="M13 19 L13 29 L19 29 L19 19 Z" fill="rgba(255,255,255,0.55)"/>
+      <circle cx="11" cy="22" r="1.2" fill="rgba(255,255,255,0.55)"/>
     </symbol>
     <symbol id="st-dot-pattern" viewBox="0 0 32 32">
       <circle cx="6" cy="6" r="2" fill="currentColor"/>
@@ -546,7 +601,7 @@ body {
     <svg class="scatter scatter-4 sticker sticker-sm sticker-lilac"><use href="#st-heart"/></svg>
 
     <div class="intro-mark-wrap">
-      <svg class="sticker sticker-xl sticker-accent"><use href="#st-bunny"/></svg>
+      <svg class="sticker sticker-xl sticker-accent"><use href="#st-house"/></svg>
     </div>
 
     <p class="intro-eyebrow">입양의날 캠페인 · 5월 11일</p>
@@ -600,12 +655,12 @@ body {
     <p class="result-eyebrow">나의 가족 유형</p>
 
     <div class="character-bubble">
-      <svg class="sticker sticker-xl sticker-accent" style="width:120px;height:120px;"><use href="#st-bunny"/></svg>
+      <svg class="sticker sticker-xl sticker-accent" style="width:110px;height:110px;"><use href="#st-star"/></svg>
     </div>
 
     <div class="result-name-wrap">
       <span class="result-tag">유형 01 / 11</span>
-      <h2 class="result-name">포근한 도서관 가족</h2>
+      <h2 class="result-name"><span class="crayon-underline">포근한 도서관 가족</span></h2>
       <p class="result-tagline">조용하고 정적인 시간을 즐기는 가족</p>
     </div>
 
